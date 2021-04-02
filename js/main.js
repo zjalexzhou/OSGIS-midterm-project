@@ -99,12 +99,13 @@ var homePage = function(){
 
 
 var fullExtent = function(){
-    map.fitBounds(map.initialBounds)
+    map.fitBounds(map.initialBounds);
 }
 
 
 var removeMarkers = function(){
-    map.removeLayer(arbitraryMarker);
+    map.removeLayer(arbitraryMarker)
+    map.closePopup();
   }
 
 
@@ -165,6 +166,11 @@ var page3 = {
     },
 };
 
+var page4 = {
+    title: "Customized Viz",
+    content: "ss"
+}
+
 var slides = [
     page1,
     page2,
@@ -176,14 +182,36 @@ var slides = [
 Layer View
 ========== */
 
+
+// specify popup options 
+var customOptions =
+    {
+    'maxWidth': '500',
+    'className' : 'custom'
+    }
+
 arbitraryMarker = [];
 var eachFeatureFunction = function(layer) {
     layer.on('click', function (event) {
-        removeMarkers();
-        arbitraryMarker = L.marker(event.latlng);// {icon: greenIcon});
-        arbitraryMarker.addTo(map);
+        // removeMarkers();
+        // arbitraryMarker = L.marker(event.latlng).bindPopup(customPopup,customOptions);// {icon: greenIcon});
+        // arbitraryMarker.addTo(map);
+
+        // create popup contents
+        var customPopup = layer.feature.properties.NAME + "<br>GEOID: "+layer.feature.properties.GEOID+"<br><br>"+"<strong>Park Access</strong>"+
+        "<br>" + (layer.feature.properties.AreaServedRatio*100).toFixed(2)+'% Area Served by a Public Park' + 
+        "<br>" + (layer.feature.properties.ParkAreaRatio*100).toFixed(2)+'% Area Covered by a Public Park' + "<br>"+"<strong>Demographics & Economics</strong>"+
+        "<br>" + (layer.feature.properties.PopDensity.toFixed(2))+' People Per Acre Land' +
+        "<br>" + (layer.feature.properties.HHInc30PercOnRentRate*100).toFixed(2)+'% Households Spend 30%+ Income on Rent' +
+        "<br>" + (layer.feature.properties.ChildAndYoundAdultsRate*100).toFixed(2)+'% Young Population (Age<25)' +
+        "<br>" + (layer.feature.properties.SeniorCitizenRate*100).toFixed(2)+'% Senior Citizen (Age>=65)' + "<br>" + "<strong>Health</strong>"+
+        "<br>" + (layer.feature.properties.lifeExpectancy)+'yrs ~ Local Avg. Life Expectancy' + 
+        "<br>" + (layer.feature.properties.poorMentalHealthRate*100).toFixed(2)+'% Population w/ Mental Health Issues' + 
+        "<br>" + (layer.feature.properties.sedentationRate*100).toFixed(2)+'% Sedentary Population';
+        var pop= L.popup().setLatLng(event.latlng).setContent(customPopup).openOn(map);
         // Zoom to a particular feature when clicked
         map.fitBounds(event.target.getBounds());
+    console.log(layer)
     })
 }
 

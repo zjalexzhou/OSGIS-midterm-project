@@ -44,3 +44,10 @@ p.main {
   height: 15px; 
   /* float:left; */
 }
+
+/* css to customize Leaflet default styles  */
+.custom .leaflet-popup-tip,
+.custom .leaflet-popup-content-wrapper {
+    background: grey;
+    color: #ffffff;
+}
