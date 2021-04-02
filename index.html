@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!-- CSS Imports -->
     <!-- <link rel="stylesheet" href="css/reset.css" /> -->
-    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -12,6 +12,7 @@
     <div class="sidebar">
         <div id="intro">
             <small><i>OSGIS Midterm Project by Zhijie Zhou</i></small>
+            <button onclick= 'homePage()' id='button-home' style='position: absolute; right: 4%;'> Home</button>
             <hr>
             <strong> 🌲 ParkServe @ Houston, TX 🌼 </strong>
             <hr>
@@ -23,17 +24,22 @@
 
         </div>
         <div id='control'>
-            <small>Click on any census tract for more detailed information. Or use the [Prev]-[Next] buttons below to navigate between slides.</small><br><br>
+            <small>Click on any census tract for more detailed information. Or use the [Prev]-[Next] buttons below to navigate between slides. Click on [Full Extent] to return from detailed view.</small><br><br>
             <button onclick= 'prevPage()' id='button-prev' style='position: absolute; right: 58%;'> Prev </button>
-            <button onclick= 'nextPage()' id='button-next' style='position: absolute; right: 42%;'> Next </button>
+            <button onclick= 'nextPage()' id='button-next' style='position: absolute; right: 42%;'> Next </button><br><br>
+            <button onclick= 'fullExtent()' id='button-full' style='position: absolute; right: 46.5%;'> Full Extent </button>
+        </div>
+        
+        <div id='control-below'>
+            
         </div>
 
     </div>
     <!-- Map -->
     <div id="map" class="map"></div>
     <!-- Legend -->
-    <div id="legend-page1" class="legend">
-        <h3 id='legend-title'> Area% Served by Public Parks</h3>
+    <div class="legend" id='leg'>
+        <h3 id='legend-title'></h3>
         <ul id=park-area-ratio>
             <div class="legendBox" style="background:rgb(202, 225, 202); border: 2px solid green" id="HIGH"></div>
             High<br><br>
@@ -46,7 +52,7 @@
     <!-- Javascript Imports -->
     <script src="js/jquery-2.2.0.js"></script>
     <script src="js/underscore.js"></script>
-    <script src="js/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

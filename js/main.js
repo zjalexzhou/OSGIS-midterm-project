@@ -8,8 +8,7 @@ var mapOpts = {
 }
 
 var map = L.map('map', mapOpts);
-
-// map.initialBounds = map.getBounds(); // record the initial bounds mapped
+map.initialBounds = map.getBounds(); // record the initial bounds mapped
 
 var tileOpts = {
     attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -43,12 +42,11 @@ var prevPage = function(){
 
 var buildPage = function(pageDefinition){
     // build up a "slide" given a page definition
-    featureGroup = L.geoJson(data, {
-        style: pageDefinition.style
-    }).addTo(map);
+    
     $('#title').text(pageDefinition.title);
     $('#content').text(pageDefinition.content);
     $('#method').text(pageDefinition.method);
+    $('#legend-title').text(pageDefinition.legendTitle)
 
     if(currentPage === 0){
         $('#button-prev').prop("disabled", true);
@@ -61,6 +59,23 @@ var buildPage = function(pageDefinition){
     } else {
         $('#button-next').prop("disabled", false);
     }
+
+    if(pageDefinition.title === "High Park Demand"){
+        $('#leg').hide();
+    }
+
+    if(pageDefinition.filter === undefined){
+        theFilter = function() {return true};
+    } else {
+        theFilter = pageDefinition.filter;
+    }
+
+    featureGroup = L.geoJson(data, {
+        style: pageDefinition.style,
+        filter: theFilter
+    }).addTo(map);
+
+    featureGroup.eachLayer(eachFeatureFunction);
 
 }
 
@@ -76,8 +91,13 @@ var homePage = function(){
     tearDown();
     currentPage = 0;
     buildPage(slides[currentPage]);
+    fullExtent();
 }
 
+
+var fullExtent = function(){
+    map.fitBounds(map.initialBounds)
+}
 
   /* =====================
 Data Path Configuration
@@ -106,15 +126,35 @@ var page1 = {
           default: return {color: 'black'} // for tracts containing NA data
         }
       }, 
+    legendTitle: "Area% Served by Public Parks"
 }
 
 var page2 = {
     title: "Population Density",
-    content: 's',
-    method: "Population density is calculated as the population per acre using the 2018 ACS-5-YR estimates. Tract-level data are roughly classified into HIGH, MEDIUM, and LOW according to the data distribution (MEAN+/-1SD)."
+    content: '\"Close-to-home opportunities to exercise and experience nature are essential for our physical and mental well-being. Studies show that parks encourage physical activity, reduce crime, revitalize local economies, and help bring neighborhoods together.\"',
+    method: "Population density is calculated as the population per acre using the 2018 ACS-5-YR estimates. Tract-level data are roughly classified into HIGH, MEDIUM, and LOW according to the data distribution (MEAN+/-1SD).",
+    style: function(feature) {
+        switch (feature.properties.RANK_PopDensity) {
+          case 'Medium': return {color: "blue"};
+          case 'Low': return {color: "red"};
+          case 'High': return {color: "green"};
+          default: return {color: 'black'} // for tracts containing NA data
+        }
+      }, 
+    legendTitle: "Population Density"
 };
 
-var page3;
+var page3 = {
+    title: "High Park Demand",
+    content: '\"Creating new parks is important, but acquiring land is only one of many strategies to improve park systems. In some cases, a city can increase its ParkScore rating by adding new park entrances or creating safe routes around obstacles like waterways and busy streets.\"',
+    method: "Filtered tracts with LOW Park Access but HIGH Population Density which...may become optimal locations for a new park. This is a demo showing tracts with high park demand only.",
+    style: function(){
+        return {color: 'Purple'}
+    },
+    filter: function(feature){
+        return(feature.properties.RANK_PopDensity === 'High' & feature.properties.RANK_AreaServedRatio === 'Low')
+    },
+};
 
 var slides = [
     page1,
@@ -122,6 +162,30 @@ var slides = [
     page3
 ]
 
+
+  /* ========
+Layer View
+========== */
+
+arbitraryMarker = [];
+var eachFeatureFunction = function(layer) {
+    layer.on('click', function (event) {
+        removeMarkers();
+        arbitraryMarker = L.marker(event.latlng);// {icon: greenIcon});
+        arbitraryMarker.addTo(map);
+        // Zoom to a particular feature when clicked
+        map.fitBounds(event.target.getBounds());
+    })
+}
+
+var removeMarkers = function(){
+    map.removeLayer(arbitraryMarker);
+  }
+
+
+  /* ========
+Main Call
+========== */
 
 $.ajax(dataPath).done(function(json){
     data = JSON.parse(json)
