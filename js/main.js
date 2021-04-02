@@ -91,6 +91,7 @@ var homePage = function(){
     tearDown();
     currentPage = 0;
     buildPage(slides[currentPage]);
+    removeMarkers();
     fullExtent();
 }
 
@@ -98,6 +99,12 @@ var homePage = function(){
 var fullExtent = function(){
     map.fitBounds(map.initialBounds)
 }
+
+
+var removeMarkers = function(){
+    map.removeLayer(arbitraryMarker);
+  }
+
 
   /* =====================
 Data Path Configuration
@@ -177,10 +184,6 @@ var eachFeatureFunction = function(layer) {
         map.fitBounds(event.target.getBounds());
     })
 }
-
-var removeMarkers = function(){
-    map.removeLayer(arbitraryMarker);
-  }
 
 
   /* ========
