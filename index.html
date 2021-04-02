@@ -10,10 +10,39 @@
   <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        sdads
+        <div id="intro">
+            <small><i>OSGIS Midterm Project by Zhijie Zhou</i></small>
+            <hr>
+            <strong> 🌲 ParkServe @ Houston, TX 🌼 </strong>
+            <hr>
+            <h1 id='title'></h1>
+            <p id='content' style='white-space: pre-line;'></p>
+            <p id='method' style='white-space: pre-line;'></p>
+            <small id='credit'><i>Data Source: Trust for Public Land, US Census Bureau</i></small>
+            <hr>
+
+        </div>
+        <div id='control'>
+            <small>Click on any census tract for more detailed information. Or use the [Prev]-[Next] buttons below to navigate between slides.</small><br><br>
+            <button onclick= 'prevPage()' id='button-prev' style='position: absolute; right: 58%;'> Prev </button>
+            <button onclick= 'nextPage()' id='button-next' style='position: absolute; right: 42%;'> Next </button>
+        </div>
+
     </div>
     <!-- Map -->
     <div id="map" class="map"></div>
+    <!-- Legend -->
+    <div id="legend-page1" class="legend">
+        <h3 id='legend-title'> Area% Served by Public Parks</h3>
+        <ul id=park-area-ratio>
+            <div class="legendBox" style="background:rgb(202, 225, 202); border: 2px solid green" id="HIGH"></div>
+            High<br><br>
+            <div class="legendBox" style="background:rgb(202, 207, 251); border: 2px solid blue" id="MEDIUM"></div>
+            Medium<br><br>
+            <div class="legendBox" style="background:rgb(243, 198, 198); border: 2px solid red" id='LOW'></div>
+            Low<br><br>
+        </ul>
+    </div>
     <!-- Javascript Imports -->
     <script src="js/jquery-2.2.0.js"></script>
     <script src="js/underscore.js"></script>
