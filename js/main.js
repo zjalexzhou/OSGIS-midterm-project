@@ -62,6 +62,8 @@ var buildPage = function(pageDefinition){
 
     if(pageDefinition.title === "High Park Demand"){
         $('#leg').hide();
+    } else {
+        $('#leg').show();
     }
 
     if(pageDefinition.filter === undefined){
